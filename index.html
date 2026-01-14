@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElectroGenios: Ingeniería Robótica con ESP32</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configuración de la fuente Inter y estilos personalizados -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Fondo principal oscuro */
+            background-color: #030712; 
+            color: #ffffff;
+        }
+        /* Estilo para la línea de tiempo centrada en pantallas grandes */
+        .timeline-line {
+            /* Móvil: Línea a la izquierda */
+            left: 2rem;
+            transform: none;
+        }
+            /* Ajustes para móviles: posición de la línea y quitar transform */
+            @media (max-width: 768px) {
+                .timeline-line {
+                    left: 1.25rem; /* alinear a la izquierda en móviles */
+                    transform: none;
+                }
+                .timeline-wrapper {
+                    padding-left: 1rem;
+                    padding-right: 1rem;
+                }
+            }
+        @media (min-width: 768px) {
+            .timeline-line {
+                left: 50%; 
+                transform: translateX(-50%);
+            }
+        }
+        /* Contenedor de imagen/GIF */
+        .robot-image-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.5rem;
+            background-color: #1f2937;
+            padding: 0.25rem;
+        }
+    </style>
+</head>
+<body class="antialiased bg-gray-900">
+
+    <!-- Navbar (Tono oscuro) -->
+    <nav class="bg-gray-800 shadow-2xl sticky top-0 z-50 border-b border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <a href="#" class="flex-shrink-0 flex items-center group">
+                    <img src="https://i.postimg.cc/13yzcZV6/Whats-App-Image-2025-12-22-at-12-14-12-PM-(1).jpg" alt="Logo" class="h-10 w-auto transition-transform duration-300 group-hover:scale-110">
+                    <span class="ml-2 text-2xl font-bold text-white tracking-wider group-hover:text-cyan-400 transition-colors">TecElectronic</span>
+                </a>
+                
+                <!-- Links de Navegación (Desktop) -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#" class="text-gray-300 hover:text-cyan-400 transition duration-300 text-sm font-semibold tracking-wide">INICIO</a>
+                    <a href="#cursos" class="text-gray-300 hover:text-cyan-400 transition duration-300 text-sm font-semibold tracking-wide">CURSOS</a>
+                    <a href="https://wa.me/59164476521" target="_blank" class="bg-cyan-600 hover:bg-cyan-500 text-white px-5 py-2 rounded-full font-bold transition duration-300 shadow-lg transform hover:scale-105 flex items-center gap-2">
+                        <span>Inscribirse</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                    </a>
+                </div>
+
+                <!-- Enlace Móvil -->
+                <div class="md:hidden">
+                    <a href="https://wa.me/59164476521" target="_blank" class="text-cyan-400 font-bold hover:text-cyan-300">Inscribirse</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sección Hero -->
+    <header class="bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 lg:py-10 rounded-b-xl shadow-2xl">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-3/5 mb-10 md:mb-0">
+                <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-tight mb-4">
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight mb-4">
+                    Aprende Robótica Desde Cero: Diseña, Programa y Da Vida a Robots Reales
+                </h1>
+                <p class="text-sm sm:text-base text-gray-300 mb-8 max-w-2xl">
+                <p class="text-base sm:text-lg text-gray-300 mb-8 max-w-2xl">
+                    Un programa práctico de robótica con 10 desafíos progresivos en los que construirás robots paso a paso, desde sus componentes básicos hasta sistemas completamente funcionales. Aprenderás a programar microcontroladores ESP32, controlar motores, sensores y actuadores, y a integrar distintas tecnologías para que tus robots interactúen con su entorno.<br><br>A lo largo del curso desarrollarás habilidades en programación, electrónica y lógica computacional, aplicando conceptos de inteligencia artificial para que tus robots puedan analizar información, tomar decisiones y actuar de forma autónoma. Todo el aprendizaje se realiza de manera práctica, enfocada en la creación de proyectos reales y el desarrollo de pensamiento tecnológico.
+                </p>
+                <div class="mt-8">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="h-1 w-16 bg-cyan-500 rounded"></div>
+                        <h3 class="text-lg font-bold text-white uppercase tracking-widest">Contáctanos para más información</h3>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-6 pl-2">
+                        <a href="https://wa.me/59164476521" target="_blank" class="flex items-center gap-2 hover:scale-105 transition-transform duration-300 group">
+                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.506-.669-.514-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.084 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                            <span class="text-base font-bold text-gray-300 group-hover:text-white transition-colors">64476521</span>
+                        </a>
+                        <a href="https://wa.me/59163246540" target="_blank" class="flex items-center gap-2 hover:scale-105 transition-transform duration-300 group">
+                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.506-.669-.514-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.084 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                            <span class="text-base font-bold text-gray-300 group-hover:text-white transition-colors">63246540</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ilustración Técnica: Robot 3D -->
+            <div class="md:w-2/5 w-full">
+                <div class="bg-gray-800 p-4 rounded-2xl shadow-2xl border border-cyan-600/50 relative overflow-hidden flex items-center justify-center">
+                    <img 
+                        src="https://www.3dnatives.com/es/wp-content/uploads/sites/4/Openbot.jpg" 
+                        alt="Robot 3D de alta tecnología"
+                        onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/94a3b8?text=Robot+Placeholder'"
+                        class="w-full h-auto object-contain max-h-[400px] rounded-xl"
+                    >
+                </div>
+            </div>
+            </div>
+            <!-- Línea de separación completa -->
+            <div class="mt-12 border-t border-gray-700 w-full"></div>
+        </div>
+    </header>
+
+    <!-- Sección de Progresión de Cursos (Línea de Tiempo) -->
+    <section id="cursos" class="py-20 bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-extrabold text-white text-center mb-12 border-b border-gray-700 pb-4">10 Niveles de Desafío: Desde Cero hasta Crear un Robot Inteligente</h2>
+
+                <!-- Contenedor de la Línea de Tiempo -->
+                <div class="relative wrap overflow-hidden py-10 px-2 md:px-10 h-full timeline-wrapper p-6 md:p-10">
+                <!-- Línea Central -->
+                <div class="absolute border-opacity-20 border-cyan-600 h-full border-l-4 timeline-line"></div>
+
+                <!-- El script llenará este contenedor -->
+                <div id="timeline-container">
+                    <!-- Los bloques se inyectan aquí -->
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- NUEVA SECCIÓN: DETALLES DEL PROYECTO (Inicialmente Oculta) -->
+    <section id="project-details" class="py-12 bg-gray-900 hidden"> 
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- La caja de contenido ahora alberga todo dinámicamente -->
+            <div id="project-content" class="bg-gray-800 p-6 md:p-8 rounded-2xl shadow-2xl border border-cyan-600/50"> 
+                <!-- Contenido inyectado dinámicamente por showProjectDetails() -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Elegante -->
+    <footer class="bg-gray-900 text-white mt-10 border-t border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 text-center">
+            <p class="text-lg font-bold mb-4">ElectroGenios: La Ingeniería del Mañana.</p>
+            <div class="flex justify-center space-x-6 text-gray-400">
+                <a href="#" class="hover:text-cyan-400 transition duration-150">Política de Privacidad</a>
+                <a href="#" class="hover:text-cyan-400 transition duration-150">Términos del Servicio</a>
+                <a href="#" class="hover:text-cyan-400 transition duration-150">Contacto y Soporte</a>
+            </div>
+            <p class="mt-8 text-sm text-gray-500">&copy; 2024 ElectroGenios. Todos los derechos reservados. Tecnología ESP32.</p>
+        </div>
+    </footer>
+
+    <!-- Bloque de Lógica JavaScript -->
+    <script>
+        // ==============================================================================
+        // CONFIGURACIÓN GLOBAL: Define aquí el URL por defecto para los proyectos
+        // que no tienen un video específico asignado.
+        // ==============================================================================
+        const DEFAULT_PROJECT_VIDEO_URL = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'; // URL de video por defecto
+        // ==============================================================================
+
+        // Definición de los 10 niveles con URLs de GIFs y datos
+        const niveles = [
+            // Nivel 1 tiene un video URL específico (YouTube)
+            { level: 1, title: 'Nivel 1: Primer Robot utilizando motores DC', desc: 'Se hará utilización de motores DC controlados mediante botones pulsadores, permitiendo encender/apagar y seleccionar la dirección de los motores DC a plena potencia.', isLeft: true, techFocus: 'Motores, ESP32 Básico', imageURL: 'https://i.ytimg.com/vi/n3sZgTbdfNs/sddefault.jpg', videoURL: 'https://drive.google.com/file/d/105bPzF84L3EIwMaM1VCIPAidzCAsZy3r/view?usp=sharing', secondVideoURL: 'https://drive.google.com/file/d/15B3QPqcjXdAdfHLLgcoi5mmqrs28bSXj/view?usp=sharing', ex1Title: 'Ejemplo Práctico #1: Puente Eléctrico', ex1Image: '', ex2Desc: '(Ascensor con cabina móvil en un riel vertical impulsada por un motor DC. Se hará utilización de un motor DC controlado mediante botones pulsadores, permitiendo encender/apagar y seleccionar la dirección (subida o bajada) del motor DC a plena potencia.)' },
+            // Nivel 2: Ejemplo con un URL de Google Drive (ficticio/ejemplo)
+            { level: 2, title: 'Nivel 2: Robot con motores DC y transistores', desc: 'Se hará utilización de motores DC controlados mediante botones pulsadores y transistores. Los pulsadores activan los transistores configurados en puente H discreto, permitiendo encender/apagar y seleccionar la dirección (adelante o atrás) de los motores DC a plena potencia.', isLeft: false, techFocus: 'Sensores, Reacción', imageURL: 'https://preview.free3d.com/img/2013/07/2146623772302510059/utml53ub.jpg', videoURL: 'https://drive.google.com/file/d/1CJ_jECh5c60AeNO2fNl96Zd1Y1o_7hiv/view?usp=sharing', secondVideoURL: 'https://drive.google.com/file/d/1B1nRV3oQIX7fEGUsLdDE6cAomcuX9m57/view?usp=sharing', ex1Title: 'Ejemplo Práctico #1: Robot Siguelíneas', ex1Image: '' }, 
+            { level: 3, title: 'Nivel 3: Control de leds con esp32', desc: 'Se hará utilización del ESP32, un microcontrolador potente con Wi-Fi y Bluetooth integrados, programable fácilmente mediante sus pines GPIO configurados como salidas digitales. El ESP32 controla luces LED conectadas a estos pines con resistencias limitadoras, permitiendo encender/apagar, crear secuencias o variar brillo con PWM de alta resolución. Todo con programación sencilla en Arduino IDE o ESP-IDF.', isLeft: true, techFocus: 'Wi-Fi, Conexión', imageURL: 'https://images-na.ssl-images-amazon.com/images/I/61XMpk4TXZL._AC_UL495_SR435,495_.jpg', videoURL: 'https://drive.google.com/file/d/1lVTdOJkLb9P1L8FN3OaG2wyIAuj7_Y_g/view?usp=sharing', ex1Title: 'Ejemplo Práctico #1: Estación Meteorológica Wi-Fi', ex1Image: '' },
+            { level: 4, title: 'Nivel 4: Control de Servomotor con Sensores y ESP32', desc: 'Se hará utilización de un servomotor controlado mediante señales PWM generadas por el ESP32, permitiendo posicionamiento preciso de 0° a 180°. Se integrarán sensores (ultrasonido, infrarrojo o potenciómetro) conectados a pines GPIO del ESP32 para leer datos del entorno y comandar automáticamente el movimiento del servomotor. Todo con programación sencilla.', isLeft: false, techFocus: 'Control, Servidor Web', imageURL: 'https://i.all3dp.com/workers/images/fit=scale-down,w=1200,quality=79,gravity=0.5x0.5,format=auto/wp-content/uploads/2021/04/23155420/Touchless-Trash-Can-Arduino-Project.jpg', videoURL: 'https://drive.google.com/file/d/1Yprs5PS0hAgHCfqE5AIcEBXRXNjMF6yc/view?usp=sharing', ex1Title: 'Ejemplo Práctico #1: Carro Robot Control Web', ex1Image: '' },
+            { level: 5, title: 'Nivel 5: Robot móvil controlado por WiFi con ESP32', desc: 'Se utilizará un módulo ESP32 para controlar motores DC a través de un driver puente H, permitiendo el manejo preciso de velocidad y dirección (adelante, atrás, izquierda, derecha) para el movimiento del robot. Se integrará un servidor web en el ESP32 para establecer conexión WiFi, enabling el control remoto del robot desde un celular mediante una interfaz sencilla en el navegador.', isLeft: true, techFocus: 'Precisión, Actuadores', imageURL: 'https://fbi.cults3d.com/uploaders/15574737/illustration-file/ad3f44cf-234f-427c-8950-96fe85930f42/2.jpg', videoURL: 'https://drive.google.com/file/d/10au9mbnhvafowZOHyez-EZ5DrqNMWS6L/view?usp=sharing', ex1Title: 'ROBO FUT', ex1Image: '', secondVideoURL: 'https://drive.google.com/file/d/1W1F7fIrll8JGcIlSP1VMkxJ13mGhzD3M/view?usp=sharing', ex2Title: 'COCHE RC', ex2Desc: 'Un carro RC (radio controlado) controlado desde el celular es un cochecito a escala con ruedas que manejas por WiFi o Bluetooth: descargas una app en tu teléfono, conectas el carro a la misma red o emparejas por Bluetooth, y con un joystick virtual en la pantalla lo haces avanzar, retroceder, girar o derrapar a toda velocidad, perfecto para carreras divertidas en casa o afuera sin necesidad de un control remoto tradicional.' },
+            { level: 6, title: 'Nivel 6: Internet de las Cosas (IoT Global)', desc: 'Se usarán servomotores controlados por el ESP32 con señales PWM, para moverlos con precisión entre 0° y 180°. El control será inalámbrico por WiFi: el ESP32 crea una página web sencilla desde la que puedes mover los servos con tu celular o computadora. Se conectarán sensores (como ultrasonido, infrarrojo o potenciómetro) al ESP32 para medir cosas del entorno, mostrar esos datos en la página web y, si quieres, hacer que los servos se muevan solos según lo que detecten los sensores.', isLeft: false, techFocus: 'Cloud, IoT, MQTT', imageURL: 'https://m.media-amazon.com/images/I/71BdzyS8tyL.jpg', videoURL: 'https://drive.google.com/file/d/1QVwhKyCn4D-atTeiGgZNOcJUfNhP6tRd/view?usp=sharing', ex1Title: 'robot otto', ex1Image: '' },
+            { level: 7, title: 'Nivel 7: Robots Inteligentes y Autónomos con ESP32', desc: 'Proyectos de robots móviles controlados por ESP32, que combinan motores DC con puente H para un movimiento fluido y preciso. Incorporan sensores (infrarrojos, ultrasónicos y más) para dotar al robot de inteligencia: seguir líneas, evitar obstáculos y tomar decisiones en tiempo real. Incluyen programación avanzada para modos autónomos y opción de control remoto por WiFi.', isLeft: true, techFocus: 'Visión, ESP32-CAM', imageURL: 'https://images.cults3d.com/ZHB_HnhG_o6WcdmcGUeRfo9tgNY=/516x516/filters:no_upscale()/https://fbi.cults3d.com/uploaders/26151544/illustration-file/dde3fb98-701f-4aee-8aa6-cfce035a4ea9/Isometrico.png', videoURL: 'https://drive.google.com/file/d/1CULMYNDLNF2oCIFXKT_c-hmUHPmv8ZOb/view?usp=sharing', ex1Title: 'seguidor de linea', ex1Image: '', secondVideoURL: 'https://drive.google.com/file/d/13W3yae9o5Z-i504IPtq-Wqn5TylshxAg/view?usp=sharing', ex2Title: 'coche evasor de obstaculo', ex2Desc: 'Un robot evasor de obstáculos es un cochecito pequeño con ruedas que se mueve solo: lleva un sensor ultrasónico adelante (como HC-SR04) que mide la distancia a los objetos, si detecta algo cerca se detiene, gira a un lado y sigue avanzando sin chocar, todo controlado por un esp32' },
+            { level: 8, title: 'Nivel 8: Casa Inteligente con ESP32: Controla Todo desde tu Celular', desc: 'Proyectos de domótica para convertir tu casa en un hogar inteligente usando el ESP32 como centro de control. Conecta relés para encender/apagar luces, ventiladores o electrodomésticos; integra sensores (temperatura, humedad, movimiento, luz) para monitoreo en tiempo real. Crea un servidor web o app sencilla para controlar todo desde tu celular por WiFi, con opciones de automatizaciones (encendido automático al detectar movimiento o por horarios).', isLeft: false, techFocus: 'Exactitud, Motores Pasos', imageURL: 'https://pbs.twimg.com/media/DCxi0pxXgAA6PUW.jpg', videoURL: 'https://www.youtube.com/watch?v=video_cnc_id', ex1Title: 'Ejemplo Práctico #1: Mini Plotter CNC', ex1Image: '' },
+            { level: 9, title: 'Nivel 9: Robot multitarea con esp32', desc: 'Proyectos de robots o mecanismos con multiples articulaciones usando servomotores, controladores esp32. Mueve partes con presicion desde tu celular por wifi.', isLeft: true, techFocus: 'Concurrente, Eficiencia', imageURL: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/04/51/c8/c8/4a/v1_E11/E118P9FL.png?w=433&cf_fit=scale-down&q=85&format=auto&s=c8ec9e7e77386865d7169106973b46368ef1b9a74ea32165125d7e4f2abfd87e', videoURL: 'https://drive.google.com/file/d/1k2GrUE182NBhggoa09gJDKJ2e4qmb4Ru/view?usp=sharing', ex1Title: 'brazo robótico', ex1Image: '' },
+            { level: 10, title: 'Nivel 10: Robot Inteligente Final (Línea de IA)', desc: 'Proyecto final: Implementa Inteligencia Artificial (IA) en el ESP32 para que tu robot tome decisiones por sí mismo (e.g., reconocer gestos, clasificar objetos).', isLeft: false, techFocus: 'IA, TinyML, Proyecto', imageURL: 'https://m.media-amazon.com/images/I/519u+ln3+HL._AC_UF894,1000_QL80_.jpg', videoURL: 'https://drive.google.com/file/d/1ffhVJqkXBCH-MOeaKGXZ7oF9CLkWQyiG/view?usp=sharing', ex1Title: 'robot con inteligencia artificial', ex1Image: '' },
+        ];
+
+        /**
+         * Función auxiliar para encontrar el enfoque tecnológico.
+         */
+        function getTechFocus(level) {
+            const nivel = niveles.find(n => n.level === level);
+            return nivel ? nivel.techFocus : 'No Definido';
+        }
+
+        /**
+         * Función para generar la descripción extendida, incluyendo el ejemplo del puente levadizo para el Nivel 5.
+         */
+        function getExtendedDescription(level) {
+            const focus = getTechFocus(level);
+            let baseDescription = `Este robot de Nivel ${level} se enfoca en la implementación de **${focus.split(',')[0].trim()}**. La arquitectura del código permite una manipulación precisa de los actuadores y la recolección de datos en tiempo real. Es la base para proyectos más complejos de automatización.`;
+
+            if (level === 1) {
+                baseDescription = `El motor funciona como el motor de un elevador: su tarea es girar para enrollar un cable o mover un engranaje que levanta la estructura del puente.<br><br>Los botones sirven para controlar la dirección: al presionar uno, el motor recibe electricidad para girar hacia un lado y subir el puente; al presionar el otro, la electricidad cambia de sentido para que el motor gire al revés y el puente baje.`;
+            } else if (level === 5) {
+                // Descripción específica para el puente levadizo en Nivel 5
+                baseDescription = `Un robot futbolista (robofut) es un cochecito pequeño con ruedas que controlas desde tu celular por WiFi: descargas una app, conectas todo a la misma red, usas un joystick en la pantalla para moverlo adelante, atrás o girar, y así empujas una pelotita para meter goles en una canchita, es como jugar fútbol pero con robots divertidos y fáciles de manejar con amigos.`;
+            } else if (level === 6) {
+                baseDescription = `Otto Ninja es la versión especial del robot Otto DIY que camina como humanoide bípedo usando dos servos de 180° (para mover las piernas con precisión) y se transforma en modo con ruedas usando dos servos de 360° (rotación continua para girar las ruedas y rodar rápido), todo controlado con un Arduino, piezas impresas en 3D y programación sencilla; es super divertido porque pasa de caminar y bailar a correr como un cochecito en segundos.`;
+            } else if (level === 7) {
+                baseDescription = `Un robot seguidor de línea es un cochecito pequeño con ruedas y sensores infrarrojos (generalmente 2 o más) en la parte de abajo que detectan una línea negra dibujada en un fondo blanco: si la línea está en el centro avanza recto, si se desvía a un lado gira el motor correspondiente para corregir y seguir la línea sola`;
+            } else if (level === 9) {
+                baseDescription = `Un brazo robótico con ESP32 es un proyecto DIY genial: usas una placa ESP32 como cerebro (con WiFi integrado), varios servomotores (normalmente 4 o 6 SG90) para mover las articulaciones como un brazo real, piezas impresas en 3D o acrílico, y lo controlas desde tu celular con una app o página web (por Bluetooth o WiFi) para agarrar objetos pequeños, moverlos o programar secuencias automáticas, super fácil y divertido para aprender robótica avanzada.`;
+            } else if (level === 10) {
+                baseDescription = `Un robot sencillo con inteligencia artificial usando ESP32 es un cochecito fácil de armar: lleva una placa ESP32-CAM (que tiene cámara y WiFi), ruedas con motores y una batería. La IA simple (con programas básicos como OpenCV o TensorFlow Lite) hace que la cámara vea y reconozca cosas, por ejemplo: detecta objetos, evita obstáculos solo, sigue una persona o identifica caras, todo sin que tú lo manejes manualmente, super divertido y no tan complicado para empezar.`;
+            }
+
+            return baseDescription;
+        }
+
+        /**
+         * Función para extraer el ID del video y determinar su tipo (YouTube o Drive).
+         * @param {string} url - La URL completa o corta del video (YouTube o Drive).
+         * @returns {{id: string | null, type: 'youtube' | 'drive' | 'unknown'}} Objeto con el ID y el tipo.
+         */
+        function getVideoIdAndType(url) {
+            // 1. YouTube Regex (captura watch, share, youtu.be)
+            const youtubeRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+            const youtubeMatch = url.match(youtubeRegex);
+            if (youtubeMatch && youtubeMatch[1]) {
+                return { id: youtubeMatch[1], type: 'youtube' };
+            }
+
+            // 2. Google Drive Regex (captura el ID de /file/d/.../view o ?id=)
+            // Asume el formato https://drive.google.com/file/d/VIDEO_ID/view o https://drive.google.com/open?id=VIDEO_ID
+            const driveRegex = /drive\.google\.com\/(?:file\/d\/|open\?id=)([^/&#?]+)/;
+            const driveMatch = url.match(driveRegex);
+            if (driveMatch && driveMatch[1]) {
+                return { id: driveMatch[1], type: 'drive' };
+            }
+
+            return { id: null, type: 'unknown' };
+        }
+
+
+        /**
+         * Función para mostrar los detalles de un proyecto específico.
+         */
+        function showProjectDetails(level, title, description, imageURL, providedVideoURL, providedSecondVideoURL) {
+            // Obtener elementos de la interfaz
+            const detailsSection = document.getElementById('project-details');
+            const timelineSection = document.getElementById('cursos');
+            const projectContent = document.getElementById('project-content');
+            
+            // Ocultar la línea de tiempo y mostrar los detalles
+            timelineSection.classList.add('hidden');
+            detailsSection.classList.remove('hidden');
+            
+            const extendedDescription = getExtendedDescription(level);
+            
+            // Determinar el URL a usar: primero el específico del nivel, luego el global.
+            const initialVideoUrl = providedVideoURL || DEFAULT_PROJECT_VIDEO_URL;
+            
+            // Usamos la nueva función para obtener el ID y el tipo
+            const { id: initialVideoId, type: videoType } = getVideoIdAndType(initialVideoUrl);
+            
+            let initialEmbedUrl = 'about:blank';
+            let iframeAllow = ''; // Permisos del iframe
+            
+            if (initialVideoId) {
+                if (videoType === 'youtube') {
+                    // Embed URL para YouTube
+                    initialEmbedUrl = `https://www.youtube.com/embed/${initialVideoId}`;
+                    iframeAllow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+                } else if (videoType === 'drive') {
+                    // Embed URL para Google Drive (usando el formato /preview para incrustar)
+                    initialEmbedUrl = `https://drive.google.com/file/d/${initialVideoId}/preview`;
+                    iframeAllow = 'autoplay'; // Permisos mínimos para Drive
+                }
+            } else {
+                 console.error("URL de video inválida o no compatible:", initialVideoUrl);
+            }
+
+            // Lógica para el segundo video
+            let secondVideoContent = `<span class="text-gray-500 text-xs md:text-sm px-2 text-center">Aquí puedes insertar el segundo video</span>`;
+            
+            if (providedSecondVideoURL && providedSecondVideoURL !== 'undefined' && providedSecondVideoURL !== '') {
+                 const { id: secondVideoId, type: secondVideoType } = getVideoIdAndType(providedSecondVideoURL);
+                 if (secondVideoId) {
+                    let secondEmbedUrl = '';
+                    let secondIframeAllow = '';
+                    if (secondVideoType === 'youtube') {
+                        secondEmbedUrl = `https://www.youtube.com/embed/${secondVideoId}`;
+                        secondIframeAllow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+                    } else if (secondVideoType === 'drive') {
+                        secondEmbedUrl = `https://drive.google.com/file/d/${secondVideoId}/preview`;
+                        secondIframeAllow = 'autoplay';
+                    }
+                    
+                    secondVideoContent = `<iframe class="w-full h-full" src="${secondEmbedUrl}" title="Segundo Video Nivel ${level}" frameborder="0" allow="${secondIframeAllow}" allowfullscreen></iframe>`;
+                 }
+            }
+            
+            // Obtener datos extendidos del nivel (títulos y descripciones personalizadas)
+            const levelData = niveles.find(n => n.level === level);
+            const ex1Title = levelData && levelData.ex1Title ? levelData.ex1Title : `Ejemplo Práctico #1: Proyecto Nivel ${level}`;
+            const ex2Title = levelData && levelData.ex2Title ? levelData.ex2Title : `Ejemplo Práctico #2: Variante del Proyecto`;
+            const ex2Desc = levelData && levelData.ex2Desc ? levelData.ex2Desc : `Este espacio está reservado para un segundo ejemplo práctico o una variación del código para el Nivel ${level}.`;
+
+            // Subtítulo colocado debajo del título principal para TODOS los niveles
+            let projectSubtitle = `<h4 class="text-xl md:text-2xl font-bold text-cyan-400 mb-2">${ex1Title}</h4>`;
+            let videoBoxTitle = 'Video de Presentación del Proyecto';
+            
+            // Rellenar el contenido dinámicamente con la nueva estructura
+            projectContent.innerHTML = `
+                <div class="relative">
+                    <!-- Botón de Cerrar (Caja Superior Derecha) -->
+                    <button onclick="hideProjectDetails()" 
+                            class="absolute right-0 top-0 z-20 p-2 rounded-full bg-red-600 text-white hover:bg-red-500 transition duration-150 transform hover:scale-110 shadow-lg"
+                            title="Cerrar Detalles">
+                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                    
+                    <!-- Título y Descripción Introductoria (Ajustado a text-3xl y text-base) -->
+                    <h3 class="text-3xl font-extrabold text-white mb-3 border-b border-cyan-600 pb-1 pr-16">${title}</h3> 
+                    ${projectSubtitle}
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4"> 
+                        
+                        <!-- Columna Izquierda: Reproductor de Video (SOLO VISUALIZACIÓN) -->
+                        <div class="space-y-3 p-4 bg-gray-700 rounded-xl shadow-inner"> 
+                            <h4 class="text-xl font-bold text-cyan-400 mb-4">${videoBoxTitle}</h4> 
+                            
+                            <!-- Contenedor del Iframe (donde se ve el video) -->
+                            <div class="aspect-video bg-gray-900 rounded-xl overflow-hidden shadow-2xl border border-gray-600">
+                                <iframe 
+                                    id="videoFrame_${level}"
+                                    class="w-full h-full" 
+                                    src="${initialEmbedUrl}" 
+                                    title="Video del Proyecto Nivel ${level} (${videoType.toUpperCase()})" 
+                                    frameborder="0" 
+                                    allow="${iframeAllow}" 
+                                    allowfullscreen
+                                ></iframe>
+                            </div>
+                            <p class="text-xs text-gray-500 text-center">Este es el video de demostración preseleccionado para el Nivel ${level}. Tipo: ${videoType.toUpperCase()}.</p>
+                        </div>
+                        
+                        <!-- Columna Derecha: Descripción Detallada e Imagen Adicional -->
+                        <div class="space-y-3"> 
+                            <h4 class="text-lg font-bold text-cyan-400">Detalles Técnicos y Galería</h4> 
+                            
+                            <!-- 1. BLOQUE DE DESCRIPCIÓN EXTENDIDA (Con la nueva lógica) -->
+                            <p class="text-base text-gray-400 p-3 bg-gray-700 rounded-lg shadow-inner"> 
+                                ${extendedDescription}
+                            </p>
+
+                            <!-- Imagen de Ejemplo Práctico #1 eliminada -->
+                        </div>
+                    </div>
+
+                    <!-- SECCIÓN ADICIONAL PARA TODOS LOS NIVELES: SEGUNDO EJEMPLO -->
+                    <div class="mt-6 md:mt-8 pt-6 border-t border-gray-600">
+                        <h4 class="text-xl md:text-2xl font-bold text-white mb-4 text-center md:text-left">${ex2Title}</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                            <!-- Video Ejemplo 2 -->
+                            <div class="space-y-3 p-3 md:p-4 bg-gray-700 rounded-xl shadow-inner">
+                                <h5 class="text-lg font-bold text-cyan-400 text-center md:text-left">Demostración Alternativa</h5>
+                                <div class="aspect-video bg-gray-900 rounded-xl overflow-hidden shadow-2xl border border-gray-600 flex items-center justify-center">
+                                    ${secondVideoContent}
+                                </div>
+                            </div>
+                            <!-- Descripción Ejemplo 2 -->
+                            <div class="space-y-3">
+                                <h5 class="text-lg font-bold text-cyan-400 text-center md:text-left">Detalles Adicionales</h5>
+                                <p class="text-base text-gray-400 p-3 bg-gray-700 rounded-lg shadow-inner">
+                                    ${ex2Desc}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Botón inferior para volver al currículo -->
+                <div class="text-center mt-6"> 
+                       <button onclick="hideProjectDetails()" class="bg-red-600 text-white font-bold py-2 px-6 rounded-lg shadow-xl hover:bg-red-700 transition duration-300 transform hover:scale-105 text-sm"> 
+                        &larr; Volver al Currículo de 10 Niveles
+                    </button>
+                </div>
+            `;
+
+            // Desplazar a la parte superior de la sección de detalles
+            detailsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        /**
+         * Función para volver a la vista del currículo.
+         */
+        function hideProjectDetails() {
+            document.getElementById('cursos').classList.remove('hidden');
+            document.getElementById('project-details').classList.add('hidden');
+            // Desplazar de vuelta a la línea de tiempo
+            document.getElementById('cursos').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        /**
+         * Función para generar el bloque de cada nivel en la línea de tiempo.
+         */
+        function createLevelBlock(level, title, description, isLeft, techFocus, imageURL, videoURL, secondVideoURL) {
+            const sideClass = isLeft ? 'md:flex-row-reverse' : 'md:flex-row';
+            const textClass = isLeft ? 'md:text-right' : 'md:text-left';
+            
+            // Contenido del texto (Descripción y Enfoque)
+            const textContent = `
+                <h3 class="text-2xl font-bold text-white mb-2">${title}</h3>
+                <p class="text-gray-300 mb-4">${description}</p>
+            `;
+
+            // Escapamos correctamente las comillas en los argumentos de la función de detalle
+            const safeTitle = title.replace(/`/g, "\\`");
+            const safeDescription = description.replace(/`/g, "\\`");
+            const safeImageURL = imageURL.replace(/`/g, "\\`");
+            // Usamos un valor por defecto si no está definido, para que el onclick no falle
+            const safeVideoURL = (videoURL || '').replace(/`/g, "\\`");
+            const safeSecondVideoURL = (secondVideoURL || '').replace(/`/g, "\\`");
+
+            // Contenido de la imagen/GIF y el nuevo botón. Se llama a showProjectDetails.
+            const imageContent = `
+                        <div class="bg-gray-800 rounded-xl p-3 shadow-lg border border-gray-700">
+                    <div class="robot-image-container mb-3">
+                        <img src="${imageURL}" alt="GIF animado de ${title}" class="max-w-full h-auto object-contain rounded-lg"/>
+                    </div>
+                    <!-- Botón que llama a la función JS para mostrar la sección de detalles -->
+                            <button onclick="showProjectDetails(${level}, \`${safeTitle}\`, \`${safeDescription}\`, \`${safeImageURL}\`, \`${safeVideoURL}\`, \`${safeSecondVideoURL}\`)" 
+                            class="block w-full text-center bg-cyan-600 text-white font-semibold py-2 rounded-lg hover:bg-cyan-500 transition duration-150 transform hover:scale-[1.03] text-sm shadow-md cursor-pointer">
+                        Ver Proyectos y Videos
+                    </button>
+                </div>
+            `;
+
+            // Bloque completo
+            const content = `
+                <!-- Item de la línea de tiempo -->
+                <div class="mb-12 flex flex-col md:flex-row justify-between items-start w-full ${sideClass} relative">
+                    <!-- Punto de la Línea de Tiempo -->
+                    <div class="hidden md:block w-5/12"></div>
+                    <!-- Círculo de Nivel Centrado -->
+                    <div class="absolute w-12 h-12 bg-cyan-600 rounded-full z-10 text-white flex items-center justify-center font-extrabold text-xl shadow-2xl border-4 border-gray-900" style="left: 50%; transform: translateX(-50%);">
+                        ${level}
+                    </div>
+                    
+                    <!-- Contenido Principal (Texto y Etiqueta) -->
+                    <div class="md:w-5/12 w-full p-6 rounded-xl bg-gray-800 shadow-xl border-t-4 border-cyan-600 hover:shadow-2xl transition duration-300 transform hover:scale-[1.02] ${isLeft ? 'md:pr-10' : 'md:pl-10'}">
+                        <div class="md:p-2 ${textClass}">
+                            ${textContent}
+                        </div>
+                        <!-- Contenido de imagen/botón visible en móvil -->
+                        <div class="mt-4 md:hidden">
+                            ${imageContent}
+                        </div>
+                    </div>
+
+                    <!-- Bloque de Imagen/Botón (Solo Desktop), se ubica en el lado opuesto del texto -->
+                    <div class="md:w-5/12 hidden md:block p-4 ${isLeft ? 'md:order-1 md:text-left' : 'md:order-3 md:text-right'}">
+                        ${imageContent}
+                    </div>
+                </div>
+            `;
+            document.getElementById('timeline-container').innerHTML += content;
+        }
+
+        /**
+         * Inicializa la línea de tiempo al cargar el DOM
+         */
+        window.onload = function() {
+            const container = document.getElementById('timeline-container');
+            container.innerHTML = ''; // Limpiar el contenedor antes de inyectar
+            niveles.forEach(n => {
+                createLevelBlock(n.level, n.title, n.desc, n.isLeft, n.techFocus, n.imageURL, n.videoURL, n.secondVideoURL);
+            });
+        };
+    </script>
+</body>
+</html>
+</body>
+</html>
